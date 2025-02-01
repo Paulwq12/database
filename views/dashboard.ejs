@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Dashboard</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Database Dashboard</h1>
+        <p>Connected to: <%= connectionInfo %></p>
+        
+        <div class="tables-list">
+            <h2>Tables</h2>
+            <% if (tables.length > 0) { %>
+                <ul>
+                    <% tables.forEach(table => { %>
+                        <li><%= table.table_name %></li>
+                    <% }); %>
+                </ul>
+            <% } else { %>
+                <p>No tables found in the database</p>
+            <% } %>
+        </div>
+        
+        <form action="/disconnect" method="post">
+            <button type="submit">Disconnect</button>
+        </form>
+    </div>
+</body>
+</html>
