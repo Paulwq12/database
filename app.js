@@ -34,8 +34,10 @@ app.use((req, res, next) => {
     next();
 });
 
-// Routes
-app.get('/', (req, res) => res.render('connect'));
+// In your app.js
+app.get('/', (req, res) => {
+    res.render('connect', { error: null }); // Explicitly pass error as null
+});
 
 app.post('/connect', async (req, res) => {
     const connectionString = req.body.connectionString;
