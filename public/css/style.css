@@ -1,5 +1,6 @@
 body {
     background-color: #f8f9fa;
+    min-height: 100vh;
 }
 
 .card {
@@ -15,17 +16,13 @@ body {
     font-weight: 600;
 }
 
-code {
-    white-space: pre-wrap;
-    word-break: break-all;
-}
-
 .list-group-item {
     transition: all 0.2s;
 }
 
 .list-group-item:hover {
     transform: translateX(5px);
+    cursor: pointer;
 }
 
 .alert {
@@ -34,4 +31,8 @@ code {
 
 .badge {
     font-weight: 500;
+}
+
+.font-monospace {
+    font-family: Monaco, Consolas, "Liberation Mono", monospace;
 }
