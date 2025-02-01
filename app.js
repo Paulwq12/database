@@ -38,6 +38,28 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.get('/', (req, res) => {
     res.render('connect', { error: null }); // Explicitly pass error as null
 });
+app.post('/connect', async (req, res) => {
+    const connectionString = req.body.connectionString;
+    
+    try {
+        // Test connection
+        const pool = new Pool({ connectionString });
+        await pool.query('SELECT NOW()');
+        await pool.end();
+
+        // Store connection in session
+        req.session.dbConfig = { connectionString };
+        req.session.save(() => {
+            res.redirect('/dashboard');
+        });
+        
+    } catch (err) {
+        res.render('connect', { 
+            error: `Connection failed: ${err.message}`,
+            connectionString: req.body.connectionString
+        });
+    }
+});
 
 // Add this after your session configuration
 app.get('/dashboard', async (req, res) => {
