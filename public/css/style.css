@@ -1,0 +1,33 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 20px;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.query-box textarea {
+    width: 100%;
+    height: 150px;
+    padding: 10px;
+    margin: 10px 0;
+}
+
+.tables-list ul {
+    list-style: none;
+    padding: 0;
+}
+
+.backup-section {
+    margin-top: 30px;
+    padding: 20px;
+    border: 1px solid #ccc;
+}
+
+.error {
+    color: red;
+    margin: 10px 0;
+}

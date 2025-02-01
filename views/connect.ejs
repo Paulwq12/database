@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>PostgreSQL Admin</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Connect to PostgreSQL</h1>
+        <% if (error) { %>
+            <div class="error"><%= error %></div>
+        <% } %>
+        <form action="/connect" method="post">
+            <input type="text" name="connectionString" 
+                   placeholder="postgresql://user:password@host:port/database"
+                   required>
+            <button type="submit">Connect</button>
+        </form>
+    </div>
+</body>
+</html>

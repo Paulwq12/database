@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>PostgreSQL Admin</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Database Management</h1>
+        
+        <!-- Query Interface -->
+        <div class="query-box">
+            <form action="/query" method="post">
+                <textarea name="query" placeholder="Enter SQL query"></textarea>
+                <button type="submit">Execute</button>
+            </form>
+        </div>
+
+        <!-- Tables List -->
+        <div class="tables-list">
+            <h2>Tables</h2>
+            <ul>
+                <% tables.forEach(table => { %>
+                    <li>
+                        <%= table.table_name %>
+                        <a href="/export/<%= table.table_name %>/csv">Export CSV</a>
+                    </li>
+                <% }); %>
+            </ul>
+        </div>
+
+        <!-- Backup/Restore -->
+        <div class="backup-section">
+            <h2>Backup/Restore</h2>
+            <form action="/backup" method="post">
+                <button type="submit">Create Backup</button>
+            </form>
+            <form action="/restore" method="post" enctype="multipart/form-data">
+                <input type="file" name="backup" required>
+                <button type="submit">Restore</button>
+            </form>
+        </div>
+
+        <!-- Query History -->
+        <div class="history">
+            <h2>Query History</h2>
+            <% history.forEach(query => { %>
+                <div class="query-item">
+                    <code><%= query.query %></code>
+                    <span><%= query.rows %> rows affected</span>
+                </div>
+            <% }); %>
+        </div>
+    </div>
+</body>
+</html>
