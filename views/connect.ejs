@@ -12,6 +12,7 @@
         <% } %>
         <form action="/connect" method="post">
             <input type="text" name="connectionString" 
+                   value="<%= typeof connectionString !== 'undefined' ? connectionString : '' %>"
                    placeholder="postgresql://user:password@host:port/database"
                    required>
             <button type="submit">Connect</button>
