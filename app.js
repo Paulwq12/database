@@ -33,7 +33,7 @@ app.use((req, res, next) => {
     }
     next();
 });
-
+app.use(express.static(path.join(__dirname, 'public')));
 // In your app.js
 app.get('/', (req, res) => {
     res.render('connect', { error: null }); // Explicitly pass error as null
@@ -41,37 +41,24 @@ app.get('/', (req, res) => {
 
 app.post('/connect', async (req, res) => {
     const connectionString = req.body.connectionString;
-    req.session.dbConfig = { connectionString };
-
-    try {
-        const pool = new Pool({ connectionString });
-        await pool.query('SELECT NOW()');
-        res.redirect('/dashboard');
-    } catch (err) {
-        res.render('connect', { error: err.message });
-    }
-});
-
-app.get('/dashboard', async (req, res) => {
-    if (!req.pool) return res.redirect('/');
     
     try {
-        const tables = await getTables(req.pool);
-        const history = req.session.queryHistory || [];
-        const backups = await getBackups();
-        const indexes = await getIndexes(req.pool);
+        // Test connection
+        const pool = new Pool({ connectionString });
+        await pool.query('SELECT NOW()');
+        await pool.end();
+
+        // Store connection in session
+        req.session.dbConfig = { connectionString };
         
-        res.render('index', {
-            tables,
-            history,
-            backups,
-            indexes,
-            currentTable: null,
-            results: null,
-            error: null
-        });
+        // Redirect to dashboard
+        res.redirect('/dashboard');
     } catch (err) {
-        res.render('index', { error: err.message });
+        // Render with error message
+        res.render('connect', { 
+            error: `Connection failed: ${err.message}`,
+            connectionString: req.body.connectionString
+        });
     }
 });
 
