@@ -39,29 +39,40 @@ app.get('/', (req, res) => {
     res.render('connect', { error: null }); // Explicitly pass error as null
 });
 
-app.post('/connect', async (req, res) => {
-    const connectionString = req.body.connectionString;
+// Add this after your session configuration
+app.get('/dashboard', async (req, res) => {
+    if (!req.session.dbConfig) {
+        return res.redirect('/');
+    }
     
     try {
-        // Test connection
-        const pool = new Pool({ connectionString });
-        await pool.query('SELECT NOW()');
-        await pool.end();
-
-        // Store connection in session
-        req.session.dbConfig = { connectionString };
+        const pool = new Pool({ connectionString: req.session.dbConfig.connectionString });
+        const tables = await pool.query(`
+            SELECT table_name 
+            FROM information_schema.tables 
+            WHERE table_schema = 'public'
+        `);
         
-        // Redirect to dashboard
-        res.redirect('/dashboard');
+        res.render('dashboard', {
+            tables: tables.rows,
+            connectionInfo: req.session.dbConfig.connectionString
+        });
+        await pool.end();
     } catch (err) {
-        // Render with error message
-        res.render('connect', { 
-            error: `Connection failed: ${err.message}`,
-            connectionString: req.body.connectionString
+        res.render('connect', {
+            error: `Connection error: ${err.message}`,
+            connectionString: req.session.dbConfig.connectionString
         });
     }
 });
 
+// Add this route for the root dashboard
+app.get('/', (req, res) => {
+    if (req.session.dbConfig) {
+        return res.redirect('/dashboard');
+    }
+    res.render('connect', { error: null, connectionString: '' });
+});
 // Query execution
 app.post('/query', async (req, res) => {
     try {
